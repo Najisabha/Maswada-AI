@@ -1,17 +1,4 @@
 {
-  "compilerOptions": {
-    "baseUrl": ".",
-    "paths": {
-      "@/*": ["./frontend/src/*"]
-    },
-    "jsx": "react-jsx",
-    "moduleResolution": "bundler",
-    "module": "ESNext",
-    "target": "ES2022",
-    "lib": ["ES2022", "DOM", "DOM.Iterable"],
-    "strict": true,
-    "skipLibCheck": true,
-    "noEmit": true
-  },
-  "include": ["frontend/src"]
+  "files": [],
+  "references": [{ "path": "./frontend" }]
 }
