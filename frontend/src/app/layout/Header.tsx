@@ -1,10 +1,13 @@
 import { Link } from "react-router-dom"
 import { FormattedMessage } from "react-intl"
+import { useAuth } from "@clerk/clerk-react"
 import { useLocaleNavigate } from "@/hooks/useLocaleNavigate"
 import { LanguageToggle } from "@/components/common/LanguageToggle"
+import { Button } from "@/components/ui/button"
 
 export function Header() {
   const { getLocalePath } = useLocaleNavigate()
+  const { isSignedIn } = useAuth()
 
   return (
     <header className="sticky top-0 z-50 w-full">
@@ -22,7 +25,16 @@ export function Header() {
             </span>
           </div>
 
-          <LanguageToggle />
+          <div className="flex items-center gap-2">
+            <LanguageToggle />
+            {!isSignedIn && (
+              <Button asChild variant="outline" size="sm">
+                <Link to={getLocalePath("/sign-in")} className="no-underline">
+                  <FormattedMessage id="guest.signIn" />
+                </Link>
+              </Button>
+            )}
+          </div>
         </div>
       </div>
     </header>

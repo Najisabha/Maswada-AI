@@ -18,6 +18,8 @@
   "landing.card.body": "استخدم الأدوات {glass} و {glassCard} و {glassBorder} للحفاظ على تناسق الأسطح في الواجهة.",
   "language.english": "English",
   "language.arabic": "العربية",
+  "guest.notesHint": "الملاحظات تُحفظ محلياً على هذا الجهاز. سجّل الدخول للمزامنة بين الأجهزة.",
+  "guest.signIn": "تسجيل الدخول",
   "home.myNotes": "ملاحظاتي",
   "home.createNote": "إنشاء ملاحظة",
   "home.searchNotes": "ابحث في الملاحظات",

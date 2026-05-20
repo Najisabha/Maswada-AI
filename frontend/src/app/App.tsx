@@ -7,7 +7,6 @@ import { NotFoundPage } from "@/app/pages/NotFoundPage"
 import SignInPage from "@/app/pages/SignInPage"
 import SignUpPage from "@/app/pages/SignUpPage"
 import NoteDetailPage from "@/app/pages/NoteDetailPage"
-import { ProtectedRoute } from "@/components/common/ProtectedRoute"
 import { LanguageProvider } from "@/contexts/LanguageProvider"
 import { IntlWrapper } from "@/components/common/IntlWrapper"
 import { defaultLocale, supportedLocales } from "@/i18n"
@@ -34,7 +33,7 @@ export default function App() {
               <Route path="sign-up" element={<SignUpPage />} />
               <Route index element={<LandingPage />} />
 
-              <Route element={<ProtectedRoute><AppLayout /></ProtectedRoute>}>
+              <Route element={<AppLayout />}>
                 <Route path="notes" element={<NotesPage />} />
                 <Route path="notes/:id" element={<NoteDetailPage />} />
                 <Route path="*" element={<NotFoundPage />} />

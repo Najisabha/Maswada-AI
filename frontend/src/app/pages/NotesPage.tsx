@@ -7,7 +7,7 @@ import { useLocaleNavigate } from "@/hooks/useLocaleNavigate"
 import { useIntl } from "react-intl"
 
 export function NotesPage() {
-  const { getAllNotes, createNote } = useNotesAPI()
+  const { getAllNotes, createNote, isSignedIn } = useNotesAPI()
   const [notes, setNotes] = useState<Note[]>([])
   const { localeNavigate } = useLocaleNavigate()
   const intl = useIntl()
@@ -44,6 +44,12 @@ export function NotesPage() {
           {intl.formatMessage({ id: "home.createNote" })}
         </Button>
       </GlassCard>
+
+      {!isSignedIn && (
+        <p className="text-center text-sm text-muted-foreground">
+          {intl.formatMessage({ id: "guest.notesHint" })}
+        </p>
+      )}
 
       {notes.length > 0 && (
         <div className="flex flex-col gap-4">

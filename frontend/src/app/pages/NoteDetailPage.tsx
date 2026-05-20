@@ -16,6 +16,7 @@ import { detectTextDirection } from "@/lib/utils";
 import { useIntl } from "react-intl";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useLocaleNavigate } from "@/hooks/useLocaleNavigate";
+import { useAuth } from "@clerk/clerk-react";
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -35,6 +36,7 @@ function NoteDetailPage() {
     const [userEdited, setUserEdited] = useState(false)
     const intl = useIntl()
     const { isRTL } = useLanguage()
+    const { isSignedIn } = useAuth()
 
     const textDirection = useMemo(() => detectTextDirection(note?.content || ""), [note?.content])
 
@@ -53,12 +55,9 @@ function NoteDetailPage() {
     useEffect(() => {
         const fetchNote = async () => {
             if (!id) return
-            const note = await getNoteById(id)
-            if (note) {
-                setNote(note)
-                setIsLoading(false)
-            }
-
+            const fetched = await getNoteById(id)
+            setNote(fetched)
+            setIsLoading(false)
         }
         fetchNote()
     }, [getNoteById, id])
@@ -147,37 +146,39 @@ function NoteDetailPage() {
                     description={intl.formatMessage({ id: 'noteDetail.deleteDescription' })}
                 />
             </div>
-            <div className="flex items-center gap-2">
-                <Button onClick={handleTranslate}>
-                    <Languages />
-                    {intl.formatMessage({ id: 'noteDetail.translate' })}
-                </Button>
-                <Button onClick={handleSummarize}>
-                    <Book />
-                    {intl.formatMessage({ id: 'noteDetail.summarize' })}
-                </Button>
-                <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                        <Button>
-                            <Pencil />
-                            {intl.formatMessage({ id: 'noteDetail.changeTone' })}
-                        </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent className="w-40" align="start">
-                        <DropdownMenuGroup>
-                            <DropdownMenuItem onClick={() => handleRewrite('comedy')}>
-                                {intl.formatMessage({ id: 'noteDetail.comedy' })}
-                            </DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => handleRewrite('formal')}>
-                                {intl.formatMessage({ id: 'noteDetail.formal' })}
-                            </DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => handleRewrite('casual')}>
-                                {intl.formatMessage({ id: 'noteDetail.casual' })}
-                            </DropdownMenuItem>
-                        </DropdownMenuGroup>  
-                    </DropdownMenuContent>
-                </DropdownMenu>
-            </div>
+            {isSignedIn && (
+                <div className="flex items-center gap-2">
+                    <Button onClick={handleTranslate}>
+                        <Languages />
+                        {intl.formatMessage({ id: 'noteDetail.translate' })}
+                    </Button>
+                    <Button onClick={handleSummarize}>
+                        <Book />
+                        {intl.formatMessage({ id: 'noteDetail.summarize' })}
+                    </Button>
+                    <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                            <Button>
+                                <Pencil />
+                                {intl.formatMessage({ id: 'noteDetail.changeTone' })}
+                            </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent className="w-40" align="start">
+                            <DropdownMenuGroup>
+                                <DropdownMenuItem onClick={() => handleRewrite('comedy')}>
+                                    {intl.formatMessage({ id: 'noteDetail.comedy' })}
+                                </DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => handleRewrite('formal')}>
+                                    {intl.formatMessage({ id: 'noteDetail.formal' })}
+                                </DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => handleRewrite('casual')}>
+                                    {intl.formatMessage({ id: 'noteDetail.casual' })}
+                                </DropdownMenuItem>
+                            </DropdownMenuGroup>
+                        </DropdownMenuContent>
+                    </DropdownMenu>
+                </div>
+            )}
             <div className="flex flex-col gap-4">
                 <Input
                     value={note?.title || ""}

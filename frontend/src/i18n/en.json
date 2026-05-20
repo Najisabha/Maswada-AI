@@ -18,6 +18,8 @@
   "landing.card.body": "Use the {glass}, {glassCard}, and {glassBorder} utilities to keep surfaces consistent across the UI.",
   "language.english": "English",
   "language.arabic": "العربية",
+  "guest.notesHint": "Notes are saved locally on this device. Sign in to sync across devices.",
+  "guest.signIn": "Sign in",
   "home.myNotes": "My Notes",
   "home.createNote": "Create Note",
   "home.searchNotes": "Search notes",

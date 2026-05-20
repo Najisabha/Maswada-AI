@@ -2,112 +2,134 @@ import type { Note, CreateNoteDTO, UpdateNoteDTO } from "@/types"
 import { useAuth } from "@clerk/clerk-react"
 import { useCallback } from "react"
 import { API_BASE_URL } from "@/lib/utils"
+import { guestNotes } from "@/lib/guestNotes"
 
 function useNotesAPI() {
-    const { getToken } = useAuth()
+    const { isSignedIn, getToken } = useAuth()
 
     const getAllNotes = useCallback(async () => {
+        if (!isSignedIn) {
+            return guestNotes.getAll()
+        }
+
         const token = await getToken()
-        
         if (!token) {
-            console.error("No token found")
-            return []
+            return guestNotes.getAll()
         }
 
         const response = await fetch(API_BASE_URL + "/api/notes", {
             headers: {
-                "Authorization": `Bearer ${token}`
-            }
+                Authorization: `Bearer ${token}`,
+            },
         })
-        
+
+        if (!response.ok) {
+            return []
+        }
+
         const data: { notes: Note[] } = await response.json()
-        
         return data.notes
-    }, [getToken])
+    }, [isSignedIn, getToken])
 
     const createNote = async (note: CreateNoteDTO) => {
+        if (!isSignedIn) {
+            return guestNotes.create(note)
+        }
+
         const token = await getToken()
-        
         if (!token) {
-            console.error("No token found")
-            return null
+            return guestNotes.create(note)
         }
 
         const response = await fetch(API_BASE_URL + "/api/notes", {
             method: "POST",
             headers: {
-                "Authorization": `Bearer ${token}`,
-                "Content-Type": "application/json"
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json",
             },
-            body: JSON.stringify(note)
+            body: JSON.stringify(note),
         })
-        
+
+        if (!response.ok) {
+            return null
+        }
+
         const data: { note: Note } = await response.json()
-        
         return data.note
     }
 
     const getNoteById = useCallback(async (id: string) => {
+        if (!isSignedIn) {
+            return guestNotes.getById(id)
+        }
+
         const token = await getToken()
-        
         if (!token) {
-            console.error("No token found")
-            return null
+            return guestNotes.getById(id)
         }
 
         const response = await fetch(API_BASE_URL + "/api/notes/" + id, {
             headers: {
-                "Authorization": `Bearer ${token}`
-            }
+                Authorization: `Bearer ${token}`,
+            },
         })
-        
+
+        if (!response.ok) {
+            return null
+        }
+
         const data: { note: Note } = await response.json()
-        
         return data.note
-    }, [getToken])
+    }, [isSignedIn, getToken])
 
     const updateNote = async (id: string, note: UpdateNoteDTO) => {
+        if (!isSignedIn) {
+            return guestNotes.update(id, note)
+        }
+
         const token = await getToken()
-        
         if (!token) {
-            console.error("No token found")
-            return null
+            return guestNotes.update(id, note)
         }
 
         const response = await fetch(API_BASE_URL + "/api/notes/" + id, {
             method: "PATCH",
             headers: {
-                "Authorization": `Bearer ${token}`,
-                "Content-Type": "application/json"
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json",
             },
-            body: JSON.stringify(note)
+            body: JSON.stringify(note),
         })
-        
-        const data: { note: Note } = await response.json()
 
+        if (!response.ok) {
+            return null
+        }
+
+        const data: { note: Note } = await response.json()
         return data.note
     }
 
     const deleteNote = async (id: string) => {
+        if (!isSignedIn) {
+            return guestNotes.delete(id)
+        }
+
         const token = await getToken()
-        
         if (!token) {
-            console.error("No token found")
-            return null
+            return guestNotes.delete(id)
         }
 
         const response = await fetch(API_BASE_URL + "/api/notes/" + id, {
             method: "DELETE",
             headers: {
-                "Authorization": `Bearer ${token}`
-            }
+                Authorization: `Bearer ${token}`,
+            },
         })
-        
+
         return response.ok
     }
 
-    return { getAllNotes, createNote, getNoteById, updateNote, deleteNote }
+    return { getAllNotes, createNote, getNoteById, updateNote, deleteNote, isSignedIn }
 }
 
-
-export default useNotesAPI;
+export default useNotesAPI
