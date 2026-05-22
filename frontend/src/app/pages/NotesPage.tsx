@@ -59,7 +59,7 @@ export function NotesPage() {
               onClick={() => handleNoteClick(note.id)}
               className="cursor-pointer px-6 py-4 transition-opacity hover:opacity-90"
             >
-              <h2 className="text-lg font-semibold">{note.title}</h2>
+              <h2 className="text-sm font-semibold">{note.title}</h2>
             </GlassCard>
           ))}
         </div>
