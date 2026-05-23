@@ -34,6 +34,7 @@ export function NotesPage() {
     localeNavigate(`/notes/${id}`)
   }
 
+  
   return (
     <div className="space-y-6">
       <GlassCard className="flex items-center justify-between gap-4 px-6 py-6 sm:px-8">
