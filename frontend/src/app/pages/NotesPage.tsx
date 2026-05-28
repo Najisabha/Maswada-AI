@@ -1,10 +1,12 @@
 import { GlassCard } from "@/components/common/GlassCard"
 import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
 import { useEffect, useState } from "react"
 import type { Note } from "@/types"
 import useNotesAPI from "@/hooks/useNotesAPI"
 import { useLocaleNavigate } from "@/hooks/useLocaleNavigate"
 import { useIntl } from "react-intl"
+import { Search } from "lucide-react"
 
 export function NotesPage() {
   const { getAllNotes, createNote, isSignedIn } = useNotesAPI()
@@ -33,16 +35,27 @@ export function NotesPage() {
   const handleNoteClick = (id: string) => {
     localeNavigate(`/notes/${id}`)
   }
-
   return (
     <div className="space-y-6">
-      <GlassCard className="flex items-center justify-between gap-4 px-6 py-6 sm:px-8">
-        <h1 className="text-xl font-semibold tracking-tight">
-          {intl.formatMessage({ id: "home.myNotes" })}
-        </h1>
-        <Button onClick={handleCreateNote} className="shrink-0 rounded-xl px-5">
-          {intl.formatMessage({ id: "home.createNote" })}
-        </Button>
+      <GlassCard className="flex flex-col gap-4 px-6 py-6 sm:px-8">
+        <div className="flex items-center justify-between gap-4">
+          <h1 className="text-xl font-semibold tracking-tight">
+            {intl.formatMessage({ id: "home.myNotes" })}
+          </h1>
+          <Button onClick={handleCreateNote} className="shrink-0 rounded-xl px-5">
+            {intl.formatMessage({ id: "home.createNote" })}
+          </Button>
+        </div>
+        <div className="flex items-center gap-2">
+          <Input
+            type="text"
+            className="flex-1"
+            placeholder={intl.formatMessage({ id: "home.searchNotes" })}
+          />
+          <Button variant="outline" size="icon" className="shrink-0">
+            <Search className="size-4" />
+          </Button>
+        </div>
       </GlassCard>
 
       {!isSignedIn && (
