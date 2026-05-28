@@ -6,10 +6,10 @@ import type { Note } from "@/types"
 import useNotesAPI from "@/hooks/useNotesAPI"
 import { useLocaleNavigate } from "@/hooks/useLocaleNavigate"
 import { useIntl } from "react-intl"
-import { Search } from "lucide-react"
+import { Search, Trash } from "lucide-react"
 
 export function NotesPage() {
-  const { getAllNotes, createNote, isSignedIn } = useNotesAPI()
+  const { getAllNotes, createNote, isSignedIn, deleteNote } = useNotesAPI()
   const [notes, setNotes] = useState<Note[]>([])
   const { localeNavigate } = useLocaleNavigate()
   const intl = useIntl()
@@ -34,6 +34,10 @@ export function NotesPage() {
 
   const handleNoteClick = (id: string) => {
     localeNavigate(`/notes/${id}`)
+  }
+
+  const handleDeleteNote = (id: string) => {
+    deleteNote(id)
   }
   return (
     <div className="space-y-6">
@@ -63,16 +67,27 @@ export function NotesPage() {
           {intl.formatMessage({ id: "guest.notesHint" })}
         </p>
       )}
-
+      {/* button delete all notes */}
       {notes.length > 0 && (
         <div className="flex flex-col gap-4">
           {notes.map((note) => (
             <GlassCard
               key={note.id}
               onClick={() => handleNoteClick(note.id)}
-              className="cursor-pointer px-6 py-4 transition-opacity hover:opacity-90"
+              className="flex cursor-pointer items-center justify-between gap-3 px-6 py-4 transition-opacity hover:opacity-90"
             >
-              <h2 className="text-sm font-semibold">{note.title}</h2>
+              <h2 className="truncate text-sm font-semibold">{note.title}</h2>
+              <Button
+                variant="destructive"
+                size="icon"
+                className="shrink-0"
+                onClick={(e) => {
+                  e.stopPropagation()
+                  handleDeleteNote(note.id)
+                }}
+              >
+                <Trash className="size-4" />
+              </Button>
             </GlassCard>
           ))}
         </div>
